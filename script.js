@@ -1,52 +1,39 @@
-let playBtn = document.getElementById("play-btn")
-let question = document.getElementById("question") 
-let hitBtn
-let dealerDraw = document.getElementById("dealer-draw")
-let playerDraw = document.getElementById("player-draw")
-let dealerTotal = document.getElementById("dealer-total")
-let playerTotal = document.getElementById("player-total")
-let result = document.getElementById("result")
-let draw = 0 
+let firstCard = 10
+let secondCard = 4
+let cards = [firstCard, secondCard]
+let sum = firstCard + secondCard
+let hasBlackJack = false
+let isAlive = true
+let message = ""
+let messageEl = document.getElementById("message-el")
+let sumEl = document.getElementById("sum-el")
+let cardsEl = document.getElementById("cards-el")
 
-function getNumber() {
-    draw = Math.floor(Math.random() * 11) + 1;
+function startGame() {
+    renderGame()
 }
 
-function resetGame() {
-    // Reset the player and dealer totals
-    playerTotal.innerText = "0";
-    dealerTotal.innerText = "0";
-
-    // Clear the cards display
-    playerDraw.innerText = "Your Cards: ";
-    dealerDraw.innerText = "";
-
-    // Clear the result message
-    result.textContent = "";
-
-    // Reset the state of start button and question
-    playBtn.style.display ="";
-    question.style.display ="";
-}
-
-function start() {
-    playBtn.style.display ="none";
-    question.style.display ="none";
-}
-
-function hit() {
-    if (Number(playerTotal.innerText)>21) {
-        resetGame();
+function renderGame() {
+    cardsEl.textContent = "Cards: " + cards[0] + " " + cards[1]
+    sumEl.textContent = "Sum: " + sum
+    if (sum <= 20) {
+        message = "Do you want to draw a new card?"
+    } else if (sum === 21) {
+        message = "You've got Blackjack!"
+        hasBlackJack = true
+    } else {
+        message = "You're out of the game!"
+        isAlive = false
     }
-    getNumber();
-    dealerDraw.innerText += " " + draw + " +";
-    dealerTotal.innerText = Number(dealerTotal.innerText) + draw;
-    getNumber();
-    playerDraw.innerText += " " + draw + " +";
-    playerTotal.innerText = Number(playerTotal.innerText) + draw;
-    if (Number(playerTotal.innerText)>21) {
-        result.textContent = "Better Luck Next Time";
-    } else if (Number(playerTotal.innerText)>21) {
-        result.textContent = "BLACKJACK! You tripled your money";
-    }
+    messageEl.textContent = message
+}
+
+
+function newCard() {
+    let card = 6
+    sum += card
+    // Push the card to the cards array
+    cards.push(card)
+    console.log(cards)
+    renderGame()
 }
