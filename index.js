@@ -1,21 +1,38 @@
-let firstCard = 10
-let secondCard = 4
-let cards = [firstCard, secondCard]
-let sum = firstCard + secondCard
+let player = {
+    name: "Per",
+    chips: 200
+}
+let cards = []
+let sum = 0
 let hasBlackJack = false
-let isAlive = true
+let isAlive = false
 let message = ""
 let messageEl = document.getElementById("message-el")
 let sumEl = document.getElementById("sum-el")
 let cardsEl = document.getElementById("cards-el")
+let newCardBtn = document.getElementById("newcardbtn")
+let playerEl = document.getElementById("player-el")
 
-// Create a function, getRandomCard(), that always returns the number 5
+// Render the player's name and chips in playerEl
+playerEl.textContent = player.name + ": $" + player.chips
 
+// Function to generate random cards
+function getRandomCard() {
+   let cardDrawn = Math.floor(Math.random() * 11) + 1
+   return cardDrawn
+}
 
+// Start game function that calls render game function
 function startGame() {
+    let firstCard = getRandomCard()
+    let secondCard = getRandomCard()
+    cards = [firstCard, secondCard]
+    sum = firstCard + secondCard
+    isAlive = true
     renderGame()
 }
 
+// Render Game function
 function renderGame() {
     cardsEl.textContent = "Cards: "
     for (let i = 0; i < cards.length; i++) {
@@ -25,21 +42,25 @@ function renderGame() {
     sumEl.textContent = "Sum: " + sum
     if (sum <= 20) {
         message = "Do you want to draw a new card?"
+        newCardBtn.style.display = ""
     } else if (sum === 21) {
         message = "You've got Blackjack!"
         hasBlackJack = true
+        newCardBtn.style.display = "none"
     } else {
         message = "You're out of the game!"
         isAlive = false
+        newCardBtn.style.display = "none"
     }
     messageEl.textContent = message
 }
 
-
+// Function to draw new card
 function newCard() {
-    let card = 6
-    sum += card
-    cards.push(card)
-    console.log(cards)
-    renderGame()
+    if (isAlive === true && hasBlackJack === false) {
+        let card = getRandomCard()
+        sum += card
+        cards.push(card)
+        renderGame()        
+    } 
 }
