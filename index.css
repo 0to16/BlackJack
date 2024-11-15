@@ -33,6 +33,12 @@ button {
     align-items: center;
 }
 
+#stopbtn {
+    background: red;
+    color: #faf6eb;
+    display: none;
+}
+
 #game {
     display: flex;
     justify-content: space-around;
