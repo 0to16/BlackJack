@@ -1,11 +1,8 @@
-let player = {
-    name: "Per",
-    chips: 200
-}
 let cards = []
 let sum = 0
 let hasBlackJack = false
 let isAlive = false
+let skipBet = false
 let message = ""
 let messageEl = document.getElementById("message-el")
 let sumEl = document.getElementById("sum-el")
@@ -15,9 +12,21 @@ let dealerCardsEl = document.getElementById("dealercards-el")
 let newCardBtn = document.getElementById("newcardbtn")
 let startGameBtn = document.getElementById("startgamebtn")
 let playerEl = document.getElementById("player-el")
+let playerBetEl = document.getElementById("playerbet-el")
 let stopBtn = document.getElementById("stopbtn")
 let dealerCards = []
 let dealerCardsSum = 0
+let playerBet = 0
+let playerChips = 0
+
+// Take player information and bet
+let playerName = prompt("Enter your name:");
+    playerChips = prompt("Enter your starting chips:");
+    playerChips = Number(playerChips)
+let player = {
+    name: playerName,
+    chips: playerChips
+}
 
 // Render the player's name and chips in playerEl
 playerEl.textContent = player.name + ": $" + player.chips
@@ -36,7 +45,6 @@ function startGame() {
     sum = firstCard + secondCard
     isAlive = true
     hasBlackJack = false
-    renderGame()
     newCardBtn.style.display = ""
     let dealerCard1 = getRandomCard()
     let dealerCard2 = getRandomCard()
@@ -45,11 +53,25 @@ function startGame() {
     dealerCardsEl.textContent = "Cards: * " + dealerCards[1]
     dealerSumEl.textContent = "Sum: " + "+ " + dealerCards[1]
     stopBtn.style.display = "inline"
+    renderGame()
+}
+
+// Bet function
+function bet() {
+    playerBet = prompt("Enter Your Bet: ")
+    playerBetEl.innerText = "Bet: " + playerBet
+    //player.chips = player.chips - playerBet  //Winning conditions need to be changed to reflect actual pot and money
+    playerEl.textContent = player.name + ": $" + player.chips
 }
 
 // Render Game function
 function renderGame() {
+    if (skipBet === false){
+        bet() 
+    }
+
     cardsEl.textContent = "Cards: "
+
     for (let i = 0; i < cards.length; i++) {
         cardsEl.textContent += cards[i] + " "
     }
@@ -66,6 +88,11 @@ function renderGame() {
         newCardBtn.style.display = "none"
         startGameBtn.style.display = ""
         startGameBtn.innerText = "RESET & START AGAIN"
+        player.chips += 3 * playerBet
+        playerBetEl.innerText = "Bet: " + playerBet
+        playerEl.textContent = player.name + ": $" + player.chips
+        playerBet = 0
+        skipBet = false
     } else if (sum === 21){
         stopGame()
     } else {
@@ -75,6 +102,11 @@ function renderGame() {
         startGameBtn.style.display = ""
         startGameBtn.innerText = "RESET & START AGAIN"
         stopBtn.style.display = "none"
+        player.chips = player.chips - playerBet
+        playerBetEl.innerText = "Bet: " + playerBet
+        playerEl.textContent = player.name + ": $" + player.chips
+        playerBet = 0
+        skipBet = false
     }
     messageEl.textContent = message
 }
@@ -85,6 +117,7 @@ function newCard() {
         let card = getRandomCard()
         sum += card
         cards.push(card)
+        skipBet = true
         renderGame()        
     } 
 }
@@ -108,18 +141,33 @@ function stopGame() {
     //Declare the winnings conditions
     if (sum > dealerCardsSum){
         message = "You have doubled your money!"
+        player.chips = player.chips + playerBet
+        playerBet = 0
+        playerBetEl.innerText = "Bet: " + playerBet
+        playerEl.textContent = player.name + ": $" + player.chips
+        skipBet = false
     } else if (sum === dealerCardsSum) {
         message = "It is a push, you get your money back"
+        playerBetEl.innerText = "Bet: " + playerBet
+        playerEl.textContent = player.name + ": $" + player.chips
+        playerBet = 0
+        skipBet = false
     } else if (dealerCardsSum > 21){
         message = "Dealer got bust, you won!"
+        player.chips = player.chips + playerBet
+        playerBet = 0
+        skipBet = false
     } else if (sum < dealerCardsSum){
         message = "Dealer won, do you wish to play another round?"
+        player.chips = player.chips - playerBet
+        playerBet = 0
+        playerBetEl.innerText = "Bet: " + playerBet
+        playerEl.textContent = player.name + ": $" + player.chips
+        skipBet = false
     }
     messageEl.textContent = message
 
-    //Add a winning or losing statement above the reset game button 
-    //Betting feature
-
+    skipBet = false
     newCardBtn.style.display = "none"
     startGameBtn.style.display = ""
     startGameBtn.innerText = "RESET & START AGAIN"
