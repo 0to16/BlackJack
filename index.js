@@ -60,12 +60,14 @@ function renderGame() {
         newCardBtn.style.display = ""
         startGameBtn.innerText = "START GAME"
         startGameBtn.style.display = "none"
-    } else if (sum === 21) {
+    } else if (sum === 21 && cards.length === 2) {
         message = "You've got Blackjack!"
         hasBlackJack = true
         newCardBtn.style.display = "none"
         startGameBtn.style.display = ""
         startGameBtn.innerText = "RESET & START AGAIN"
+    } else if (sum === 21){
+        stopGame()
     } else {
         message = "You're out of the game!"
         isAlive = false
@@ -102,9 +104,21 @@ function stopGame() {
     }
    
     dealerSumEl.innerText = "Sum: " + dealerCardsSum
-    //Add sum for the dealer
+    
     //Declare the winnings conditions
+    if (sum > dealerCardsSum){
+        message = "You have doubled your money!"
+    } else if (sum === dealerCardsSum) {
+        message = "It is a push, you get your money back"
+    } else if (dealerCardsSum > 21){
+        message = "Dealer got bust, you won!"
+    } else if (sum < dealerCardsSum){
+        message = "Dealer won, do you wish to play another round?"
+    }
+    messageEl.textContent = message
+
     //Add a winning or losing statement above the reset game button 
+    //Betting feature
 
     newCardBtn.style.display = "none"
     startGameBtn.style.display = ""
