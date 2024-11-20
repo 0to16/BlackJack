@@ -148,7 +148,7 @@ function stopGame() {
         skipBet = false
     } else if (sum === dealerCardsSum) {
         message = "It is a push, you get your money back"
-        playerBetEl.innerText = "Bet: " + playerBet
+        playerBetEl.innerText = `Bet: ${playerBet}`
         playerEl.textContent = player.name + ": $" + player.chips
         playerBet = 0
         skipBet = false
